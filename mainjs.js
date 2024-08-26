@@ -227,9 +227,7 @@ function darkmode()
 
 function logInUser()
 {
-    console.log("check")
     let saveindex= 0;
-
     let login = document.querySelector('.loginwrap'); 
     login.style.display="block";   
 
@@ -288,6 +286,7 @@ function closeLoginPop()
 
 function clearLogInForm()
 {
+
     document.getElementById('emailForm').valu="";
     document.getElementById('passwordForm').value="";
     document.getElementById('loginbtn').remove();
@@ -324,3 +323,69 @@ function validNumberReturnErrorMessage(number)
 }
 
 console.log(uniqContact("0509939020"));
+
+
+function registerUser()
+{
+
+let login = document.querySelector('.registerwrap'); 
+    login.style.display="block"; 
+
+    let btn = document.createElement('btn');
+    document.getElementById('regform').append(btn);
+    btn.innerHTML="Register";
+    btn.classList= "btn";
+    btn.id= "Registerinbtn";
+
+    btn.onclick= function()
+    {
+        let email = document.getElementById('regMail').value;
+        let password = document.getElementById('regPass').value;
+        addNewUserToDataBase(email,password);
+    }
+} 
+
+function addNewUserToDataBase(EmailAdress,password)
+{
+    if (checkValidPassWord(password))
+    {
+    listOfUsers.push({EmailAdress,password});
+     clearRegisterForm();
+     alert("successful ! acount has been created.")
+    }
+    else
+    alert("password must contain at least 6 characters and contain at least one letter")
+}
+
+
+function clearRegisterForm()
+{
+
+    document.getElementById('regMail').value="";
+    document.getElementById('regPass').value="";
+    document.getElementById('Registerinbtn').remove();
+    document.querySelector('.registerwrap').style.display= "none";
+
+
+}
+
+function closeRegisterPop()
+{
+    clearRegisterForm();
+}
+
+function checkValidPassWord(password)
+{
+    if (password.length<6 && (!isNaN(password)))
+        return false;
+
+    else if (password.length<6)
+        return false;
+
+    else if (!isNaN(password))
+        return false;
+
+    return true;
+
+
+}
