@@ -5,24 +5,24 @@ let contactList=
     {
         "name":"Eyal Shani",
         "address": "Aba Hoshi Haifa",
-        "phonenumber": "050123453"
+        "phonenumber": "0509939020"
     },
     {
         "name":"Assaf granit",
         "address": "Tel Aviv Hayarkon",
-        "phonenumber": "050999999"
+        "phonenumber": "0508089020"
 
     },
     {
         "name":"Tomer Tomas",
         "address": "Tel aviv Yad Labanim",
-        "phonenumber": "050888888"
+        "phonenumber": "0544977711"
 
     },
     {
         "name":"Haim Cohen",
         "address": "Tel Aviv Gordon",
-        "phonenumber": "043344142"
+        "phonenumber": "0522595959"
     }
 ];
 
@@ -77,10 +77,12 @@ function renderContacts()
 
 function deleteContact(index)
 {
-    alert("This action will remove the contact, Are you sure?")
+    let flag = confirm("This action will remove all  contacts, Are you sure?")
+    if (flag){
     restartMain()
     contactList.splice(index,1);
     renderContacts();
+    }
 }
 
 function restartMain()
@@ -104,21 +106,28 @@ function editContact(index)
     form.append(btn);
     btn.innerHTML = "save";
     btn.className="saveButonForDelete";
+
     btn.onclick = function()
     {
-        saveChangeEdit(index);
+    let headline = document.getElementById('headline');
+    headline.innerHTML= "edit contact";
+    let name = document.getElementById('editname').value 
+    let address = document.getElementById('editaddress').value 
+    let phone = document.getElementById('editphone').value 
+        saveChangeEdit(index,name,address,phone);
     }
 
 }
 
-function saveChangeEdit(index)
+function saveChangeEdit(index,name,address,phone)
 {
-    let headline = document.getElementById('headline');
-    headline.innerHTML= "edit contact";
-    console.log("only when i close");
-    let name = document.getElementById('editname').value 
-    let address = document.getElementById('editaddress').value 
-    let phone = document.getElementById('editphone').value 
+    
+    if (!isValidContact(phone) || !uniqContact(phone))
+        validNumberReturnErrorMessage(phone);
+
+    else
+    {
+        console.log("saveIt")
 
     contactList[index].name = name;
     contactList[index].address = address;
@@ -126,6 +135,7 @@ function saveChangeEdit(index)
     
     closeEditPop();
     renderContacts();
+    }
 
 
 }
@@ -142,9 +152,12 @@ function closeEditPop()
 
 function removeAllContacts()
 {
-    alert("This action will remove all  contacts, Are you sure?")
+    let flag = confirm("This action will remove all  contacts, Are you sure?")
+    if (flag)
+    {
     restartMain();
     contactList = [];
+    }
 }
 
 function addNewContact()
@@ -159,21 +172,26 @@ function addNewContact()
     form.append(btn);
     btn.innerHTML = "Add new Contact";
     btn.className="saveButonForDelete";
+
+  
+
     btn.onclick = function()
     {
-        saveTheNewContact();
+        let name = document.getElementById('editname').value 
+        let address=document.getElementById('editaddress').value 
+        let phonenumber= document.getElementById('editphone').value
+        saveTheNewContact(name,address,phonenumber);
     }
 
 }
 
-function saveTheNewContact()
+function saveTheNewContact(name,address,phonenumber)
 {
-    let name = document.getElementById('editname').value 
-    let address=document.getElementById('editaddress').value 
-    let phonenumber= document.getElementById('editphone').value 
 
-    console.log(phonenumber)
-
+    if (  !uniqContact(phonenumber)|| !isValidContact(phonenumber))
+        validNumberReturnErrorMessage(phonenumber)
+    else
+    {
     contactList.push
     (
         {
@@ -183,14 +201,12 @@ function saveTheNewContact()
         }
     );
 
-    console.log(contactList);
-
     closeEditPop();
     renderContacts();
     clearFormFileds();
-    
-
 }
+}
+
 
 function clearFormFileds()
 {
@@ -277,3 +293,34 @@ function clearLogInForm()
     document.getElementById('loginbtn').remove();
 
 }
+
+function isValidContact(number)
+{
+    if (isNaN(number) || number.length !=10)
+     return false;
+    return true;
+}
+
+function uniqContact(number)
+{
+    let flag=true;
+    contactList.forEach((elem)=>
+    {
+        if (number===elem.phonenumber)
+        {
+            console.log("right");
+            flag= false;
+        }
+    });
+    return flag;
+}
+
+function validNumberReturnErrorMessage(number)
+{
+    if (!uniqContact(number))
+        alert("Contact is elready exist");
+    else if (!isValidContact(number))
+        alert ("Number is Not Valid");
+}
+
+console.log(uniqContact("0509939020"));
